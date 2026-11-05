@@ -1,0 +1,598 @@
+<!doctype html>
+<html lang="it">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex">
+    <title>Cliccami</title>
+    <style>
+        :root {
+            --bg: #0b0f14;
+            --panel: #11161d;
+            --red: #ff3b30;
+            --amber: #ffcc00;
+            --green: #2ecc71;
+            --text: #e6edf3;
+            --muted: #8b949e;
+            --border: #232c36;
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        .sim-banner {
+            background: var(--amber);
+            color: #000;
+            text-align: center;
+            padding: 12px 16px;
+            font-weight: 700;
+            font-size: 15px;
+            border-bottom: 2px solid #000;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .sim-banner small {
+            display: block;
+            font-weight: 400;
+            margin-top: 4px;
+            font-size: 13px;
+        }
+
+        .wrap {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 24px 16px 60px
+        }
+
+        #faseAllarme {
+            border: 2px solid var(--red);
+            border-radius: 14px;
+            background: linear-gradient(180deg, #1a0d0d, #11161d);
+            padding: 28px 24px;
+            text-align: center;
+        }
+
+        #faseAllarme h1 {
+            color: var(--red);
+            font-size: 26px;
+            margin: 0 0 10px;
+            letter-spacing: .5px;
+            animation: pulse 1.2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1
+            }
+
+            50% {
+                opacity: .55
+            }
+        }
+
+        #faseAllarme p {
+            color: #ffb3ae;
+            margin: 0 0 18px;
+            line-height: 1.5
+        }
+
+        .scan {
+            font-family: ui-monospace, Consolas, monospace;
+            font-size: 13px;
+            color: #ffd6d3;
+            background: #0b0f14;
+            border: 1px solid #3a1a1a;
+            border-radius: 10px;
+            padding: 14px;
+            text-align: left;
+            min-height: 190px;
+            overflow: visible;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+
+        .scan .ok {
+            color: var(--green)
+        }
+
+        .scan .warn {
+            color: var(--amber)
+        }
+
+        .scan .bad {
+            color: var(--red)
+        }
+
+        .btn {
+            margin-top: 18px;
+            padding: 12px 18px;
+            border: 0;
+            border-radius: 10px;
+            background: var(--green);
+            color: #04140a;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            filter: brightness(1.05)
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--text);
+            border: 1px solid var(--border);
+            font-weight: 600;
+        }
+
+        #faseSpiegazione {
+            display: none
+        }
+
+        .card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        .card h2 {
+            margin: 0 0 10px;
+            font-size: 20px;
+            color: var(--green);
+        }
+
+        .card h3 {
+            margin: 18px 0 8px;
+            font-size: 15px;
+            color: var(--amber);
+            text-transform: uppercase;
+            letter-spacing: .5px;
+        }
+
+        .card p {
+            line-height: 1.6;
+            margin: 8px 0
+        }
+
+        .card ul {
+            padding-left: 20px;
+            line-height: 1.65;
+            margin: 8px 0
+        }
+
+        .card li {
+            margin-bottom: 6px
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 8px 10px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        th {
+            color: var(--muted);
+            font-weight: 600;
+            width: 42%
+        }
+
+        td {
+            font-family: ui-monospace, Consolas, monospace;
+            word-break: break-word
+        }
+
+        .note {
+            font-size: 13px;
+            color: var(--muted)
+        }
+
+        .good {
+            color: var(--green)
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="wrap">
+
+        <section id="faseAllarme">
+            <h1>⚠️ HAI CLICCATO IL LINK</h1>
+            <p>Se questo fosse stato un link vero, in questo momento qualcosa sarebbe già successo. Guarda cosa un sito
+                qualsiasi riesce a fare solo perché lo hai aperto.</p>
+
+            <div class="scan" id="scan" aria-live="polite"></div>
+
+            <button class="btn" id="btnMostra">Mostrami cosa è successo davvero</button>
+        </section>
+
+        <section id="faseSpiegazione">
+
+            <div class="card">
+                <h2>✔ Era una simulazione: nessun virus, ma qualcosa è successo davvero</h2>
+                <p>Questa pagina non contiene virus e non scarica file. Però, come qualunque sito vero, ha già
+                    contattato un server esterno solo perché tu l'hai aperta: al proprietario del link sono arrivate
+                    tutte le informazioni tecniche del tuo dispositivo.</p>
+                <p>È la stessa cosa che fanno i truffatori: <strong>prima ancora che tu clicchi qualcosa, sanno che sei
+                        passato di lì</strong>, da quale dispositivo e da quale rete. E possono preparare la prossima
+                    mossa.</p>
+            </div>
+
+            <div class="card">
+                <h3>Cosa questo sito ha potuto leggere senza che tu facessi nulla</h3>
+                <table id="infoTable">
+                    <tr>
+                        <th>Browser</th>
+                        <td id="i-browser">—</td>
+                    </tr>
+                    <tr>
+                        <th>Sistema operativo</th>
+                        <td id="i-os">—</td>
+                    </tr>
+                    <tr>
+                        <th>User agent</th>
+                        <td id="i-ua">—</td>
+                    </tr>
+                    <tr>
+                        <th>Lingua</th>
+                        <td id="i-lang">—</td>
+                    </tr>
+                    <tr>
+                        <th>Lingue (tutte)</th>
+                        <td id="i-langs">—</td>
+                    </tr>
+                    <tr>
+                        <th>Fuso orario</th>
+                        <td id="i-tz">—</td>
+                    </tr>
+                    <tr>
+                        <th>Offset UTC</th>
+                        <td id="i-offset">—</td>
+                    </tr>
+                    <tr>
+                        <th>Piattaforma</th>
+                        <td id="i-plat">—</td>
+                    </tr>
+                    <tr>
+                        <th>Mobile</th>
+                        <td id="i-mobile">—</td>
+                    </tr>
+                    <tr>
+                        <th>Schermo</th>
+                        <td id="i-screen">—</td>
+                    </tr>
+                    <tr>
+                        <th>Schermo disponibile</th>
+                        <td id="i-avail">—</td>
+                    </tr>
+                    <tr>
+                        <th>Finestra browser</th>
+                        <td id="i-win">—</td>
+                    </tr>
+                    <tr>
+                        <th>Device pixel ratio</th>
+                        <td id="i-dpr">—</td>
+                    </tr>
+                    <tr>
+                        <th>Orientamento</th>
+                        <td id="i-orient">—</td>
+                    </tr>
+                    <tr>
+                        <th>Touch</th>
+                        <td id="i-touch">—</td>
+                    </tr>
+                    <tr>
+                        <th>Cookie abilitati</th>
+                        <td id="i-cookie">—</td>
+                    </tr>
+                    <tr>
+                        <th>Do-not-track</th>
+                        <td id="i-dnt">—</td>
+                    </tr>
+                    <tr>
+                        <th>CPU core (logici)</th>
+                        <td id="i-cpu">—</td>
+                    </tr>
+                    <tr>
+                        <th>RAM approssimativa</th>
+                        <td id="i-ram">—</td>
+                    </tr>
+                    <tr>
+                        <th>Connessione</th>
+                        <td id="i-conn">—</td>
+                    </tr>
+                    <tr>
+                        <th>Batteria</th>
+                        <td id="i-batt">—</td>
+                    </tr>
+                    <tr>
+                        <th>IP locali (WebRTC)</th>
+                        <td id="i-ips">—</td>
+                    </tr>
+                    <tr>
+                        <th>Referrer</th>
+                        <td id="i-ref">—</td>
+                    </tr>
+                    <tr>
+                        <th>Ora di apertura</th>
+                        <td id="i-time">—</td>
+                    </tr>
+                </table>
+                <p class="note">Tutto questo lo vede qualunque sito tu apra, sempre. Sono informazioni che il tuo
+                    browser fornisce da solo.</p>
+            </div>
+
+            <div class="card">
+                <h3>Cosa avrebbe potuto fare un sito malevolo</h3>
+                <ul>
+                    <li><strong>Piazzare un finto "allarme virus"</strong> a tutto schermo per spaventarti e farti
+                        chiamare un numero o installare un'app.</li>
+                    <li><strong>Provare un drive-by download</strong>: se browser o sistema non sono aggiornati, la
+                        pagina può tentare di installare malware senza chiedere nulla.</li>
+                    <li><strong>Mostrarti un finto login</strong> (banca, Amazon, corriere) per rubarti la password.
+                    </li>
+                    <li><strong>Raccogliere dati di fingerprinting</strong> per riconoscerti nei giorni successivi e
+                        rendere più credibile la prossima truffa.</li>
+                    <li><strong>Chiederti di attivare un profilo</strong> o scaricare un'app da fonte esterna per
+                        prendere il controllo del telefono.</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>Cosa fare quando un link è sospetto</h3>
+                <ul>
+                    <li><strong>Non aprirlo</strong> se non sai chi te l'ha mandato o perché.</li>
+                    <li><strong>Apri tu</strong> il sito ufficiale: digita l'indirizzo o usa l'app.</li>
+                    <li>Se l'hai già aperto: <strong>chiudi la scheda</strong>, non compilare nulla, non scaricare
+                        nulla.</li>
+                    <li><strong>Tieni aggiornati</strong> browser e sistema operativo: è la difesa più efficace contro
+                        il drive-by download.</li>
+                </ul>
+                <p class="note">Se un messaggio a schermo ti spaventa, ricorda: <strong>un sito web non può sapere se il
+                        tuo dispositivo è infetto.</strong> Gli allarmi a tutto schermo sono quasi sempre truffe.</p>
+            </div>
+
+            <div class="card" style="text-align:center">
+                <p class="good" style="margin:0 0 14px"><strong>Era una simulazione. Non c'è nessun virus sul tuo
+                        dispositivo.</strong></p>
+                <button class="btn btn-ghost" onclick="window.close()">Chiudi questa pagina</button>
+            </div>
+
+        </section>
+    </div>
+
+    <script>
+        /* ============================================================
+           PARSER USER AGENT
+           ============================================================ */
+        function parseBrowser(ua) {
+            if (/Edg\//.test(ua)) return 'Microsoft Edge';
+            if (/OPR\/|Opera/.test(ua)) return 'Opera';
+            if (/Firefox\//.test(ua)) return 'Firefox';
+            if (/Chrome\//.test(ua)) return 'Chrome';
+            if (/Safari\//.test(ua)) return 'Safari';
+            return 'sconosciuto';
+        }
+        function parseOS(ua) {
+            if (/Windows NT 10/.test(ua)) return 'Windows 10/11';
+            if (/Windows NT 6\.3/.test(ua)) return 'Windows 8.1';
+            if (/Windows NT 6\.1/.test(ua)) return 'Windows 7';
+            if (/Mac OS X/.test(ua)) return 'macOS';
+            if (/Android/.test(ua)) return 'Android';
+            if (/iPhone|iPad|iPod/.test(ua)) return 'iOS';
+            if (/Linux/.test(ua)) return 'Linux';
+            return 'sconosciuto';
+        }
+        function parseVersion(ua, regex) {
+            const m = ua.match(regex);
+            return m ? m[1] : '';
+        }
+
+        /* ============================================================
+           IP LOCALI VIA WEBRTC
+           ============================================================ */
+        function getLocalIPs(timeout = 1500) {
+            return new Promise((resolve) => {
+                const ips = new Set();
+                try {
+                    const pc = new RTCPeerConnection({ iceServers: [] });
+                    pc.createDataChannel('');
+                    pc.onicecandidate = (e) => {
+                        if (!e.candidate) return;
+                        const m = e.candidate.candidate.match(/(\d{1,3}(?:\.\d{1,3}){3})/);
+                        if (m) ips.add(m[1]);
+                    };
+                    pc.createOffer().then(o => pc.setLocalDescription(o)).catch(() => { });
+                    setTimeout(() => {
+                        try { pc.close(); } catch (_) { }
+                        resolve([...ips]);
+                    }, timeout);
+                } catch (e) {
+                    resolve([]);
+                }
+            });
+        }
+
+        /* ============================================================
+           FINGERPRINT
+           ============================================================ */
+        async function getFingerprint() {
+            const ua = navigator.userAgent;
+            const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection || {};
+            const offsetOre = -new Date().getTimezoneOffset() / 60;
+
+            const fp = {
+                'browser': parseBrowser(ua) + ' ' + parseVersion(ua, /(?:Edg|OPR|Firefox|Chrome|Safari)\/([\d.]+)/),
+                'sistema operativo': parseOS(ua),
+                'user agent': ua,
+                'lingua': navigator.language || 'n/d',
+                'lingue (tutte)': (navigator.languages && navigator.languages.join(', ')) || 'n/d',
+                'fuso orario': (Intl.DateTimeFormat().resolvedOptions().timeZone || 'n/d'),
+                'offset UTC': (offsetOre >= 0 ? 'UTC+' : 'UTC') + offsetOre,
+                'piattaforma': navigator.platform || 'n/d',
+                'mobile': /Mobi|Android|iPhone|iPad|iPod/.test(ua) ? 'sì' : 'no',
+                'schermo': screen.width + '×' + screen.height + ' (' + screen.colorDepth + ' bit colore)',
+                'schermo disponibile': screen.availWidth + '×' + screen.availHeight,
+                'finestra browser': window.innerWidth + '×' + window.innerHeight,
+                'device pixel ratio': String(window.devicePixelRatio || 1),
+                'orientamento': (screen.orientation && screen.orientation.type) || 'n/d',
+                'touch': ('ontouchstart' in window || navigator.maxTouchPoints > 0) ? 'sì' : 'no',
+                'cookie abilitati': navigator.cookieEnabled ? 'sì' : 'no',
+                'do-not-track': navigator.doNotTrack || 'non impostato',
+                'CPU core (logici)': navigator.hardwareConcurrency || 'n/d',
+                'RAM approssimativa': navigator.deviceMemory ? navigator.deviceMemory + ' GB' : 'n/d',
+                'connessione': (conn.effectiveType || conn.type)
+                    ? [
+                        (conn.effectiveType || conn.type),
+                        conn.downlink ? conn.downlink + ' Mbps' : null,
+                        conn.rtt ? 'RTT ' + conn.rtt + 'ms' : null
+                    ].filter(Boolean).join(' / ')
+                    : 'n/d',
+                'referrer': document.referrer || '(nessuno)',
+                'ora di apertura': new Date().toLocaleString('it-IT')
+            };
+
+            try {
+                if (navigator.getBattery) {
+                    const b = await navigator.getBattery();
+                    fp['batteria'] = Math.round(b.level * 100) + '%' + (b.charging ? ' (in carica)' : '');
+                }
+            } catch (_) { }
+
+            try {
+                const ips = await getLocalIPs(1500);
+                if (ips.length) fp['IP locali (WebRTC)'] = ips.join(', ');
+            } catch (_) { }
+
+            return fp;
+        }
+
+        /* ============================================================
+           INVIO AL SERVER
+           ============================================================ */
+        async function notifica(payload) {
+            try {
+                await fetch('/notify', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+            } catch (e) {
+                console.warn('notifica non inviata', e);
+            }
+        }
+    </script>
+
+    <script>
+        (function () {
+            "use strict";
+
+            /* ---- All'apertura: fingerprint completo + animazione ---- */
+            (async () => {
+                const fp = await getFingerprint();
+                await notifica({ evento: 'Ha APERTO la pagina di allarme (click semplice)', ...fp });
+                riempiTabella(fp);
+            })();
+
+            /* ---- Animazione "scansione" ---- */
+            const scan = document.getElementById('scan');
+            const lines = [
+                ['bad', '> Connessione stabilita con il link...'],
+                ['warn', '> Lettura informazioni dal browser...'],
+                ['', '  > user agent: ' + navigator.userAgent.slice(0, 80) + (navigator.userAgent.length > 80 ? '…' : '')],
+                ['', '  > lingua: ' + (navigator.language || 'n/d')],
+                ['', '  > fuso orario: ' + (Intl.DateTimeFormat().resolvedOptions().timeZone || 'n/d')],
+                ['', '  > schermo: ' + screen.width + '×' + screen.height + ' (pixel ratio ' + (window.devicePixelRatio || 1) + ')'],
+                ['warn', '> Invio dati al proprietario del link...'],
+                ['bad', '> Questo è il punto in cui un sito vero potrebbe agire.'],
+                ['ok', '> Qui invece NON c\'è nessun virus: è una simulazione.'],
+            ];
+
+            let i = 0;
+            function tick() {
+                if (i >= lines.length) {
+                    scan.innerHTML += '\n<span class="warn">> In attesa. Premi il pulsante per capire cosa può fare un sito malevolo.</span>';
+                    return;
+                }
+                const [cls, text] = lines[i++];
+                const span = document.createElement('span');
+                if (cls) span.className = cls;
+                span.textContent = text + '\n';
+                scan.appendChild(span);
+                scan.scrollTop = scan.scrollHeight;
+                setTimeout(tick, 420);
+            }
+            tick();
+
+            /* ---- Riempi la tabella con le info del browser ---- */
+            function riempiTabella(fp) {
+                const set = (id, v) => {
+                    const el = document.getElementById(id);
+                    if (el) el.textContent = (v === undefined || v === null || v === '') ? '—' : v;
+                };
+
+                set('i-browser', fp['browser']);
+                set('i-os', fp['sistema operativo']);
+                set('i-ua', fp['user agent']);
+                set('i-lang', fp['lingua']);
+                set('i-langs', fp['lingue (tutte)']);
+                set('i-tz', fp['fuso orario']);
+                set('i-offset', fp['offset UTC']);
+                set('i-plat', fp['piattaforma']);
+                set('i-mobile', fp['mobile']);
+                set('i-screen', fp['schermo']);
+                set('i-avail', fp['schermo disponibile']);
+                set('i-win', fp['finestra browser']);
+                set('i-dpr', fp['device pixel ratio']);
+                set('i-orient', fp['orientamento']);
+                set('i-touch', fp['touch']);
+                set('i-cookie', fp['cookie abilitati']);
+                set('i-dnt', fp['do-not-track']);
+                set('i-cpu', fp['CPU core (logici)']);
+                set('i-ram', fp['RAM approssimativa']);
+                set('i-conn', fp['connessione']);
+                set('i-batt', fp['batteria']);
+                set('i-ips', fp['IP locali (WebRTC)']);
+                set('i-ref', fp['referrer']);
+                set('i-time', fp['ora di apertura']);
+            }
+
+            /* ---- Click: notifica evento e mostra spiegazione (nessun redirect) ---- */
+            document.getElementById('btnMostra').addEventListener('click', async function () {
+                await notifica({ evento: 'Ha CLICCATO "Mostrami cosa è successo davvero" (click semplice)' });
+
+                document.getElementById('faseAllarme').style.display = 'none';
+                const s = document.getElementById('faseSpiegazione');
+                s.style.display = 'block';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        })();
+    </script>
+</body>
+
+</html>
