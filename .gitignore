@@ -1,0 +1,22 @@
+# 1. File di log della demo (contiene dati sensibili come password e IP)
+log.txt
+
+# 2. File temporanei e cache di Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# 3. Ambienti virtuali Python (se in futuro ne usi uno)
+venv/
+env/
+ENV/
+.env
+
+# 4. File di sistema (macOS, Windows, Linux)
+.DS_Store
+Thumbs.db
+.directory
+
+# 5. Cartelle di editor di testo / IDE
+.vscode/
+.idea/
